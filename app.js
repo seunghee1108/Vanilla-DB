@@ -26,13 +26,13 @@ const readFile = (fileType, res) => {
   });
 };
 
-const connetData = () => {
+const connectData = () => {
   return mysql.createConnection({
-    host:"bangseunghuiui-MacBookAir.local",
-    user:"mysql",
-    password:"1108",
-    database:"TEST",
-    port:3308,
+    host:"localhost",
+    user:"bang",
+    password:"0000",
+    database:"test",
+    
   });
 };
 
@@ -51,11 +51,13 @@ const server = http.createServer((req, res) => {
     
 
       const formData = qs.parse(body);
-
+      const connection = connectData();
+      connection.connect();
+      
       const { username, password } = formData;
       console.log("Username and password:", username, password);
 
-      const query =  "SELECT * FROM users WHERE username = ? AND password = ?";
+      const query =  "SELECT * FROM hi WHERE username = ? AND password = ?";
 
        connection.query(query, [username, password], (err, results) => {
         if (err) {
@@ -85,7 +87,7 @@ const server = http.createServer((req, res) => {
       const connection = connectData();
       connection.connect();
 
-      const query = "INSERT INTO users (name, username, password) VALUES (?, ?, ?)";
+      const query = "INSERT INTO hi (name, username, password) VALUES (?, ?, ?)";
       connection.query(query, [name, username, password], (err) => {
         if (err) {
           console.log("Error signing up:", err);

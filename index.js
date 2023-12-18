@@ -61,7 +61,7 @@ function loginForm() {
   });
 }
 
-function joinRorm() {
+function joinForm() {
   const joinFrom = createForm(inputData, 0);
 
   const joinButton = document.createElement("button");
