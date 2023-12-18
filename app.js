@@ -43,22 +43,29 @@ const server = http.createServer((req, res) => {
     readFile("js", res);
   } else if (req.url === "/login" && req.method === "POST") {
     let body = "";
+    // POST로 받은 데이터 chunk로 조각조각 받아서 body에 넣어줌 
     req.on("data", (chunk) => {
       body += chunk.toString();
     });
+    // chunk 수신 다 받으면 할일 
     req.on("end", () => {
       console.log("Received data:", body);
     
 
+      // 쿼리스트링으로 받았으니 qs 모듈로 파싱해줘야 함
       const formData = qs.parse(body);
+      // 데이터베이스 연결 설정
       const connection = connectData();
       connection.connect();
       
       const { username, password } = formData;
+      // 사용자 이름, 비밀번호를 콘솔에 출력
       console.log("Username and password:", username, password);
 
+      
       const query =  "SELECT * FROM hi WHERE username = ? AND password = ?";
 
+       
        connection.query(query, [username, password], (err, results) => {
         if (err) {
           console.error("Error logging in:", err);
@@ -66,6 +73,7 @@ const server = http.createServer((req, res) => {
           res.end("로그인에 실패했습니다.");
           return;
         }
+        // 반환된 데이터 검색 결과가 있나 없나 검증 후 동작 나눠줌 
         if (results.length > 0) {
           res.writeHead(200);
           res.end("로그인이 완료되었습니다.");
